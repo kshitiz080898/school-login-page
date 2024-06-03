@@ -1,0 +1,55 @@
+buildscript {
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.3.0"
+        classpath "gradle.plugin.de.jansauer.printcoverage:printcoverage:2.0.0"
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'java'
+    id 'checkstyle'
+}
+apply plugin: 'jacoco'
+apply plugin: 'de.jansauer.printcoverage'
+apply from: 'jacoco.gradle'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+javadoc.options.encoding = 'UTF-8'
+check.dependsOn javadoc
+
+checkstyle {
+    toolVersion = "10.12.4"
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '21'
+targetCompatibility = '21'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification, printCoverage
+}
