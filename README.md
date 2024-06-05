@@ -1,2 +1,2 @@
 # school-login-page
-School ERP Project 
+School ERP Project. 
