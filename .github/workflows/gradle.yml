@@ -49,23 +49,3 @@ jobs:
         if: always()
         with:
           junit_files: '**/test-results/**/*.xml'
-      - name: Analyze with SonarCloud
-        continue-on-error: true
-        if: env.SONAR_TOKEN != null && env.SONAR_TOKEN != ''
-        uses: eskatos/gradle-command-action@v2.3.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: sonarqube -Psonar.organization=resilience4j
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
-      - name: Publish to Sonatype
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        uses: eskatos/gradle-command-action@v2.3.3
-        env:
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USER }}
-          ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
-        with:
-          arguments: publishToSonatype
-          cache-disabled: true
