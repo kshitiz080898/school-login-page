@@ -68,5 +68,4 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
         with:
           arguments: publishToSonatype
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+          cache-disabled: true
